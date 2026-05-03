@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Task Manager{% endblock %}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --bg-color: #faf8f5;
+            --text-color: #2b2b2b;
+            --primary-color: #ff6b6b;
+            --primary-hover: #ff5252;
+            --card-bg: #ffffff;
+            --border-color: #2b2b2b;
+            --muted-text: #7a7a7a;
+            --accent-green: #a8e6cf;
+            --accent-yellow: #ffd3b6;
+            --accent-blue: #dcedc1;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            background-image: radial-gradient(#e0ddd5 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        h1, h2, h3, h4, h5, h6, .navbar-brand {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+        
+        .navbar {
+            background-color: transparent;
+            padding: 1.5rem 0;
+            margin-bottom: 1rem;
+        }
+        
+        .navbar-brand {
+            font-size: 1.5rem;
+            color: var(--text-color) !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-brand i {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+        }
+        
+        .nav-link {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            color: var(--text-color) !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(0,0,0,0.05);
+            transform: scale(1.05);
+        }
+
+        .nav-link.text-danger {
+            color: var(--primary-color) !important;
+        }
+
+        .nav-item .text-muted {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .auth-card {
+            max-width: 420px;
+            margin: 3rem auto;
+            border: 3px solid var(--border-color);
+            border-radius: 24px;
+            box-shadow: 8px 8px 0px rgba(43, 43, 43, 0.1);
+            background: var(--card-bg);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        
+        .auth-card .card-header {
+            background-color: var(--card-bg);
+            border-bottom: 2px dashed #e0ddd5;
+            padding: 2rem 1.5rem 1rem;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            box-shadow: 4px 4px 0px rgba(43, 43, 43, 0.2);
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--border-color);
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px rgba(43, 43, 43, 0.2);
+            color: #fff;
+        }
+
+        .btn-primary:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px rgba(43, 43, 43, 0.2);
+        }
+        
+        .form-control, .form-select {
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0ddd5;
+            background-color: #faf9f6;
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.2s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            box-shadow: none;
+            border-color: var(--primary-color);
+            background-color: #fff;
+        }
+
+        .input-group-text {
+            background-color: transparent;
+            border: 2px solid #e0ddd5;
+            border-right: none;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .input-group .form-control {
+            border-left: none;
+        }
+
+        .input-group:focus-within .input-group-text,
+        .input-group:focus-within .form-control {
+            border-color: var(--primary-color);
+        }
+        
+        .flash-messages {
+            margin-top: 1rem;
+        }
+
+        .alert {
+            border-radius: 16px;
+            border: 2px solid var(--border-color);
+            box-shadow: 4px 4px 0px rgba(43, 43, 43, 0.1);
+            font-weight: 600;
+        }
+        
+        .task-card {
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 6px 6px 0px rgba(43, 43, 43, 0.08);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 1.5rem;
+            background-color: var(--card-bg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .task-card:hover {
+            transform: translateY(-8px) rotate(-1deg);
+            box-shadow: 10px 12px 0px rgba(43, 43, 43, 0.12);
+        }
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background-color: #e0ddd5;
+        }
+
+        .task-card.status-pending-card::before { background-color: var(--accent-yellow); }
+        .task-card.status-inprogress-card::before { background-color: var(--accent-blue); }
+        .task-card.status-completed-card::before { background-color: var(--accent-green); }
+        
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 0.5em 1em;
+            border-radius: 20px;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .status-Pending { background-color: var(--accent-yellow); color: #855c0b; }
+        .status-InProgress { background-color: var(--accent-blue); color: #3b5c20; }
+        .status-Completed { background-color: var(--accent-green); color: #1e5a44; }
+
+        .btn-outline-secondary, .btn-outline-danger {
+            border-width: 2px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--border-color);
+            color: white;
+            border-color: var(--border-color);
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('main.dashboard') }}">
+                <i class="bi bi-asterisk"></i> Tasky
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border: none;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    {% if session.get('user_id') %}
+                        <li class="nav-item me-3 d-none d-lg-block">
+                            <span class="nav-link text-muted" style="pointer-events: none;">Hey there, {{ session.get('username') }} 👋</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.dashboard') }}">My Board</a>
+                        </li>
+                        <li class="nav-item ms-2">
+                            <a class="nav-link text-danger" href="{{ url_for('auth.logout') }}">Log out</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a>
+                        </li>
+                        <li class="nav-item ms-2">
+                            <a class="btn btn-primary btn-sm ms-2" href="{{ url_for('auth.signup') }}" style="padding: 0.5rem 1rem;">Join Now</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
